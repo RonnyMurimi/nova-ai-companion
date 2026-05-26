@@ -1,0 +1,33 @@
+# Nova AI Companion
+
+An intelligent AI companion with voice interaction, persistent memory, and multi-threaded conversations.
+
+## Features
+
+- 🤖 AI-powered conversations (GPT-4 or FREE Llama 3.3 via Groq)
+- 🧵 Multiple chat threads
+- 🧠 Vector memory for context recall
+- 🎤 Voice input with live transcription
+- 🔊 Customizable text-to-speech
+- 🎭 Adjustable AI personality
+- 😊 Emotion detection
+- 🔐 User authentication
+
+## Live Demo
+
+- **Frontend**: [Your Netlify URL will go here]
+- **Backend**: [Your Railway URL will go here]
+
+## Local Development
+
+### Prerequisites
+
+- Python 3.11+
+- Groq API key (free from https://console.groq.com/keys)
+
+### Setup
+
+1. Clone repository:
+```bash
+git clone https://github.com/YOUR_USERNAME/nova-ai.git
+cd nova-ai

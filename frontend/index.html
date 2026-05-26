@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova AI Companion</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Auth Screen -->
+    <div id="auth-screen" class="auth-screen">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="auth-logo">✨</div>
+                <h1>Nova AI</h1>
+                <p>Your intelligent companion</p>
+            </div>
+
+            <div id="connection-warning" class="connection-warning hidden">
+                ⚠️ Cannot connect to backend server
+            </div>
+
+            <div class="auth-tabs">
+                <button class="tab-btn active" onclick="switchAuthTab('login')">Login</button>
+                <button class="tab-btn" onclick="switchAuthTab('register')">Register</button>
+            </div>
+
+            <div id="login-form" class="auth-form active">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="login-username" autocomplete="username" placeholder="Enter username">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="login-password" autocomplete="current-password" placeholder="Enter password">
+                </div>
+                <button onclick="handleLogin()" class="btn-primary full-width">Login</button>
+            </div>
+
+            <div id="register-form" class="auth-form">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="register-username" autocomplete="username" placeholder="Choose username">
+                    <small>3-20 characters, letters and numbers only</small>
+                </div>
+                <div class="form-group">
+                    <label>Email (optional)</label>
+                    <input type="email" id="register-email" autocomplete="email" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="register-password" autocomplete="new-password" placeholder="Choose password">
+                    <small>At least 6 characters</small>
+                </div>
+                <button onclick="handleRegister()" class="btn-primary full-width">Create Account</button>
+            </div>
+
+            <div id="auth-message" class="auth-message hidden"></div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="app-screen" class="app-container hidden">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-brand">
+                    <div class="brand-icon">✨</div>
+                    <div>
+                        <div class="brand-name">Nova</div>
+                        <div class="brand-subtitle" id="current-username"></div>
+                    </div>
+                </div>
+                <button class="icon-btn mobile-close" onclick="toggleSidebar()">✕</button>
+            </div>
+
+            <!-- New Chat Button -->
+            <div class="sidebar-action">
+                <button onclick="createNewThread()" class="btn-new-chat">
+                    <span>➕</span>
+                    New Chat
+                </button>
+            </div>
+
+            <!-- Thread List -->
+            <div class="thread-section">
+                <div id="thread-list" class="thread-list">
+                    <!-- Threads inserted here -->
+                </div>
+            </div>
+
+            <!-- Sidebar Footer -->
+            <div class="sidebar-footer">
+                <button onclick="openSettings()" class="sidebar-footer-btn">
+                    ⚙️ Settings
+                </button>
+                <button onclick="logout()" class="sidebar-footer-btn">
+                    🚪 Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Chat -->
+        <main class="main-chat">
+            <header class="chat-header">
+                <button class="icon-btn" onclick="toggleSidebar()">☰</button>
+                <div class="header-title">
+                    <h1 id="current-thread-title">New Chat</h1>
+                </div>
+                <div class="header-actions">
+                    <button class="icon-btn" onclick="renameThread()" title="Rename chat">✏️</button>
+                    <button class="icon-btn" onclick="deleteThread()" title="Delete chat">🗑️</button>
+                </div>
+            </header>
+
+            <div id="chat-box" class="chat-messages">
+                <!-- Messages inserted here -->
+            </div>
+
+            <div class="typing-indicator hidden" id="typing-indicator">
+                <div class="typing-avatar">N</div>
+                <div class="typing-bubbles">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+
+            <div class="chat-input-area">
+                <div id="recording-status" class="recording-status hidden">
+                    <div class="recording-pulse"></div>
+                    <span id="recording-text">Listening...</span>
+                    <button onclick="stopRecording()" class="stop-recording-btn">Stop</button>
+                </div>
+
+                <div class="input-wrapper">
+                    <textarea
+                        id="message-input"
+                        placeholder="Message Nova..."
+                        rows="1"
+                        onkeydown="handleEnterKey(event)"
+                    ></textarea>
+                    <div class="input-buttons">
+                        <button id="mic-btn" onclick="startRecording()" class="input-icon-btn" title="Voice input">
+                            🎤
+                        </button>
+                        <button onclick="sendMessage()" class="send-btn" id="send-btn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal hidden">
+        <div class="modal-overlay" onclick="closeSettings()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Settings</h2>
+                <button onclick="closeSettings()" class="icon-btn">✕</button>
+            </div>
+            <div class="modal-body">
+                <!-- Voice Settings -->
+                <div class="settings-section">
+                    <h3>🎙️ Voice Settings</h3>
+
+                    <div class="setting-item">
+                        <label class="setting-label">Voice</label>
+                        <select id="voice-select" class="setting-select" onchange="saveVoiceSettings()">
+                            <option value="">Loading voices...</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-item">
+                        <label class="setting-label">Speech Rate</label>
+                        <input type="range" id="speech-rate" min="0.5" max="2" step="0.1" value="1" oninput="updateRateDisplay(this.value)" onchange="saveVoiceSettings()">
+                        <span id="rate-display" class="setting-value">1x</span>
+                    </div>
+
+                    <div class="setting-item">
+                        <label class="setting-label">Pitch</label>
+                        <input type="range" id="speech-pitch" min="0.5" max="2" step="0.1" value="1" oninput="updatePitchDisplay(this.value)" onchange="saveVoiceSettings()">
+                        <span id="pitch-display" class="setting-value">1x</span>
+                    </div>
+
+                    <div class="setting-item">
+                        <label class="toggle-label">
+                            <span>Auto-read AI responses</span>
+                            <input type="checkbox" id="auto-read-toggle" onchange="saveVoiceSettings()">
+                        </label>
+                    </div>
+
+                    <button onclick="testVoice()" class="btn-secondary full-width">Test Voice</button>
+                </div>
+
+                <!-- Profile Settings -->
+                <div class="settings-section">
+                    <h3>👤 Profile</h3>
+                    <div class="setting-item">
+                        <label class="setting-label">Display Name</label>
+                        <input type="text" id="display-name" class="setting-input" placeholder="Your name">
+                    </div>
+                    <button onclick="saveProfile()" class="btn-primary full-width">Save Profile</button>
+                </div>
+
+                <!-- Personality -->
+                <div class="settings-section">
+                    <h3>🎭 AI Personality</h3>
+
+                    <div class="setting-item">
+                        <label class="setting-label">Formality</label>
+                        <input type="range" id="formality" min="0" max="100" value="50" oninput="updateFormalityDisplay(this.value)">
+                        <span id="formality-display" class="setting-value">50%</span>
+                    </div>
+
+                    <div class="setting-item">
+                        <label class="setting-label">Enthusiasm</label>
+                        <input type="range" id="enthusiasm" min="0" max="100" value="70" oninput="updateEnthusiasmDisplay(this.value)">
+                        <span id="enthusiasm-display" class="setting-value">70%</span>
+                    </div>
+
+                    <div class="setting-item">
+                        <label class="setting-label">Detail Level</label>
+                        <input type="range" id="verbosity" min="0" max="100" value="50" oninput="updateVerbosityDisplay(this.value)">
+                        <span id="verbosity-display" class="setting-value">50%</span>
+                    </div>
+
+                    <button onclick="savePersonality()" class="btn-primary full-width">Apply Personality</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="js/ui.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
