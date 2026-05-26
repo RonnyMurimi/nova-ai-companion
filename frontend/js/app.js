@@ -1,4 +1,4 @@
-const API_BASE = 'http://127.0.0.1:8000';
+const API_BASE = 'https://web-production-e8938.up.railway.app/';
 
 let userId = null;
 let username = null;
