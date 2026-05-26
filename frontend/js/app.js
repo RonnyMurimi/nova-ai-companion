@@ -1,4 +1,4 @@
-const API_BASE = 'https://web-production-e8938.up.railway.app/';
+const API_BASE = 'https://web-production-e8938.up.railway.app';
 
 let userId = null;
 let username = null;
