@@ -15,8 +15,8 @@ An intelligent AI companion with voice interaction, persistent memory, and multi
 
 ## Live Demo
 
-- **Frontend**: [Your Netlify URL will go here]
-- **Backend**: [Your Railway URL will go here]
+- **Frontend**: https://chatnoova.netlify.app/
+- **Backend**: https://web-production-e8938.up.railway.app/
 
 ## Local Development
 
