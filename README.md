@@ -29,5 +29,5 @@ An intelligent AI companion with voice interaction, persistent memory, and multi
 
 1. Clone repository:
 ```bash
-git clone https://github.com/YOUR_USERNAME/nova-ai.git
+git clone https://github.com/RonnyMurimi/nova-ai.git
 cd nova-ai
